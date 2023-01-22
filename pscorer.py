@@ -1,6 +1,7 @@
 
-from PyPDF2 import PdfFileReader
-from PyPDF2.utils import PdfReadError
+from PyPDF2 import PdfReader
+
+from PyPDF2.errors import PdfReadError
 
 import re
 
@@ -72,9 +73,9 @@ class PScorer():
 			search_pattern = self.default_pattern
 
 		with open(self.files_path+pdf_file, 'rb') as file:
-			pdf = PdfFileReader(file)
+			pdf = PdfReader(file)
 			try:
-				number_of_pages = pdf.getNumPages()
+				number_of_pages = len(pdf.pages)
 			except PdfReadError:
 				print("Could not read pdf, sry bro")
 				return []
@@ -83,7 +84,7 @@ class PScorer():
 
 			for i in range(number_of_pages):
 				try:
-					page_content = pdf.getPage(i).extractText()
+					page_content = pdf.pages[i].extract_text()
 				except TypeError:
 					print("Could not read pdf, sry bro")
 					return []
